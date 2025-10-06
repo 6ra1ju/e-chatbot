@@ -14,12 +14,22 @@ Ecommerce-Web/
 
 ## Cài đặt và chạy
 
-### Backend (Django)
+### 1. Cài đặt dependencies (một lần cho toàn bộ project)
 
-1. **Cài đặt dependencies:**
+```bash
+pip install -r requirements.txt
+```
+
+**Lưu ý**: Cần cài đặt pymilvus với milvus_lite:
+```bash
+pip install "pymilvus[milvus_lite]>=2.3.0"
+```
+
+### 2. Backend (Django)
+
+1. **Di chuyển vào thư mục server:**
 ```bash
 cd server
-pip3 install -r requirements.txt
 ```
 
 2. **Chạy migrations:**
@@ -33,16 +43,16 @@ python3 manage.py migrate
 python3 manage.py populate_products
 ```
 
-4. **Khởi động server:**
+4. **Khởi động Django server:**
 ```bash
 python3 manage.py runserver
 ```
 
 Server sẽ chạy tại `http://127.0.0.1:8000/`
 
-### Frontend (React)
+### 3. Frontend (React)
 
-1. **Cài đặt dependencies:**
+1. **Di chuyển vào thư mục client và cài đặt dependencies:**
 ```bash
 cd client
 npm install
@@ -55,17 +65,14 @@ npm start
 
 Frontend sẽ chạy tại `http://localhost:3000/`
 
-### Chatbot (AI)
+### 4. Chatbot (AI)
 
-**Xem hướng dẫn chi tiết tại [`chatbot/README.md`](chatbot/README.md)**
-
-1. **Cài đặt dependencies:**
+1. **Di chuyển vào thư mục chatbot:**
 ```bash
 cd chatbot
-pip install -r requirements.txt
 ```
 
-2. **Tạo file `.env`:**
+2. **Tạo file `.env` với Groq API key:**
 ```env
 GROQ_API_KEY=your_groq_api_key_here
 ```
