@@ -57,8 +57,6 @@ Frontend sẽ chạy tại `http://localhost:3000/`
 
 ### Chatbot (AI)
 
-**Xem hướng dẫn chi tiết tại [`chatbot/README.md`](chatbot/README.md)**
-
 1. **Cài đặt dependencies:**
 ```bash
 cd chatbot
