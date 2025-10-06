@@ -62,6 +62,7 @@ client/.eslintcache
 chatbot/milvus_lite.db
 chatbot/__pycache__/
 chatbot/.env
+chatbot/amazon_data.csv
 
 # Server
 server/__pycache__/
