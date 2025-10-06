@@ -251,71 +251,7 @@ class ChatbotHandler(BaseHTTPRequestHandler):
                 
                 print(f"\n📨 Received: {message}")
                 
-                import re
-                message_lower = message.lower()
-                tool_result = None
-                
-                # 1. Price range queries: "sản phẩm từ X đến Y"
-                if any(keyword in message_lower for keyword in ['giá từ', 'có giá', 'price from', 'between']):
-                    price_match = re.search(r'(\d+)\s*[-–]\s*(\d+)', message) or \
-                                  re.search(r'từ\s*(\d+)\s*đến\s*(\d+)', message)
-                    
-                    if price_match:
-                        min_price = int(price_match.group(1))
-                        max_price = int(price_match.group(2))
-                        print(f"⚡️ Fast path: price range {min_price} - {max_price}")
-                        
-                        try:
-                            tool_result = recommend_product_by_range.invoke({
-                                "q": message,
-                                "field": "salePrice",
-                                "n": 3,
-                                "min_price": min_price,
-                                "max_price": max_price
-                            })
-                        except Exception as e:
-                            tool_result = f"❌ Lỗi: {str(e)}"
-                
-                # 2. Highest price queries: "sản phẩm đắt nhất"
-                elif any(keyword in message_lower for keyword in ['đắt nhất', 'cao nhất', 'most expensive', 'highest price']):
-                    print(f"⚡️ Fast path: highest price")
-                    try:
-                        tool_result = get_highest_price.invoke({"field": "salePrice"})
-                    except Exception as e:
-                        tool_result = f"❌ Lỗi: {str(e)}"
-                
-                # 3. Lowest price queries: "sản phẩm rẻ nhất"
-                elif any(keyword in message_lower for keyword in ['rẻ nhất', 'thấp nhất', 'cheapest', 'lowest price']):
-                    print(f"⚡️ Fast path: lowest price")
-                    try:
-                        tool_result = get_lowest_price.invoke({"field": "salePrice"})
-                    except Exception as e:
-                        tool_result = f"❌ Lỗi: {str(e)}"
-                
-                # 4. Brand queries: "sản phẩm VEVOR", "sản phẩm từ Amazon"
-                elif 'sản phẩm' in message_lower and any(brand in message_lower for brand in ['vevor', 'amazon', 'sony', 'samsung']):
-                    # Extract brand name
-                    for brand in ['vevor', 'amazon', 'sony', 'samsung', 'apple', 'lg', 'dell', 'hp']:
-                        if brand in message_lower:
-                            print(f"⚡️ Fast path: brand {brand}")
-                            try:
-                                tool_result = product_from_brand.invoke({"brand_name": brand, "n": 3})
-                            except Exception as e:
-                                tool_result = f"❌ Lỗi: {str(e)}"
-                            break
-                
-                if tool_result:
-                    print(f"✅ Fast response: {tool_result[:100]}...")
-                    self.send_response(200)
-                    self.send_header('Content-type', 'application/json')
-                    self.send_header('Access-Control-Allow-Origin', '*')
-                    self.end_headers()
-                    self.wfile.write(json.dumps({
-                        'response': tool_result,
-                        'status': 'success'
-                    }).encode())
-                    return
-                
+                # Process with LLM agent
                 tool_result = None
                 config = {"recursion_limit": 10}
                 
